@@ -147,21 +147,6 @@ flowchart LR
     Handoff --> Maintain
 ```
 
-The same path as a flow:
-
-```mermaid
-flowchart LR
-    Intake --> Understand
-    Understand --> Challenge
-    Challenge --> Decide
-    Decide --> Plan
-    Plan --> Build
-    Build --> Verify
-    Verify --> Release
-    Release --> Handoff
-    Handoff --> Maintain
-```
-
 Not every request uses every stage.
 
 An informational answer may only need:
