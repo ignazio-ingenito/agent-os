@@ -6,9 +6,9 @@ Most AI agent frameworks optimize execution.
 
 Agent OS optimizes judgment.
 
-It provides lifecycle, governance, review, knowledge management, and decision-making workflows for AI-assisted engineering.
+It gives AI-assisted engineering a lifecycle, a governance model, review modes, knowledge management, and decision workflows.
 
-Built to work with Codex, Claude Code, Gemini CLI, OpenHands, Cursor-like agents, and future agent platforms.
+It is built to work with Codex, Claude Code, Gemini CLI, OpenHands, Cursor-like agents, and future agent platforms.
 
 ---
 
@@ -23,7 +23,7 @@ Contributions, critiques, and experiments are welcome.
 
 Agent OS is a working model for agent-assisted software engineering.
 
-It starts from a practical problem: on real repositories, the hard part is not getting an AI agent to write code. The hard part is getting the agent to understand the project, choose the right level of process, preserve useful context, and avoid shortcuts where shortcuts are expensive.
+It starts from a practical problem: on real repositories, getting an AI agent to write code is not the hard part. The hard part is getting the agent to understand the project, choose the right amount of process, preserve useful context, and avoid shortcuts where shortcuts are expensive.
 
 This repository documents that operating model.
 
@@ -56,7 +56,7 @@ AI agents move quickly. Sometimes too quickly.
 
 In a real codebase, speed without discipline turns into noise: vague plans, files changed before the problem is understood, decisions left in chat history, skipped verification, and documentation that drifts out of date without anyone noticing.
 
-Agent OS adds a minimal structure around that work. Not to slow everything down, but to make sure each request gets the right amount of understanding, challenge, decision-making, verification, and memory.
+Agent OS adds a small amount of structure around that work. Not to slow everything down, but to make sure each request gets the right level of understanding, challenge, decision-making, verification, and memory.
 
 A typo fix should not become an architecture review. A data migration cannot be treated like a local patch.
 
@@ -64,7 +64,7 @@ A typo fix should not become an architecture review. A data migration cannot be 
 
 Agent OS is for people working in repositories where context matters: software engineers, architects, platform engineers, DevOps engineers, maintainers, and power users of coding agents.
 
-It is useful when agents are not only producing isolated snippets, but are participating in technical research, architectural decisions, implementation, maintenance, review, or handoff across sessions.
+It is useful when agents are doing more than isolated snippets: technical research, architectural decisions, implementation, maintenance, review, or handoff across sessions.
 
 It also helps solo developers and small teams that rely heavily on AI agents. In that setting, the same person often carries architecture, implementation, documentation, operations, and decisions at once. Agent OS helps keep continuity between sessions.
 
@@ -83,7 +83,7 @@ Agent OS is meant for the point where these problems start showing up:
 * agents failing to distinguish local edits from risky actions
 * maintenance treated as generic cleanup instead of governed work
 
-The goal is not more process everywhere. The goal is less hidden interest paid later.
+The goal is not more process everywhere. It is less hidden debt later.
 
 ## How the idea evolved
 
@@ -93,7 +93,7 @@ That was useful, but too flat. Some concepts overlapped. Research looked like a 
 
 The design review pushed Agent OS toward one central choice: it should be lifecycle-first.
 
-The lifecycle is the spine. Overlays add specialized requirements. Review lenses evaluate work. Governance decides what is authoritative, what is temporary, and what must be updated.
+The lifecycle is the spine. Overlays add specialized requirements. Review lenses evaluate work. Governance says what is authoritative, what is temporary, and what needs to be updated.
 
 That led to several accepted decisions:
 
@@ -108,13 +108,13 @@ These decisions are recorded in `docs/decisions/COS_ACCEPTED_DECISIONS.md`.
 
 ## The main lessons
 
-Agent OS began as a collection of skills and pipelines. The more the design was tested, the clearer it became that the core problem was not finding more skills.
+Agent OS began as a collection of skills and pipelines. The more the design was tested, the clearer it became that the problem was not a lack of skills.
 
 The hard part is deciding when to use them.
 
 How much process does a small request need? When should research become a decision? Where should context be saved? How does an architectural choice survive beyond one chat session?
 
-That moved the design toward lifecycle and governance. Skills still matter, but they are not the center. The center is how work moves from request to decision, from decision to verification, and from verification to reusable knowledge.
+That pushed the design toward lifecycle and governance. Skills still matter, but they are not the center. The center is how work moves from request to decision, from decision to verification, and from verification to reusable knowledge.
 
 ```mermaid
 flowchart LR
@@ -174,7 +174,7 @@ The stages keep the work legible:
 
 ## Key concepts
 
-This is the basic relationship between a request, the lifecycle, review lenses, domain overlays, and the output that remains after the work:
+This is the basic relationship between a request, the lifecycle, review lenses, domain overlays, and the output left behind:
 
 ```mermaid
 flowchart LR
@@ -231,7 +231,9 @@ Current overlays are:
 * Diagnosis
 * Incident
 
-Research and Diagnosis are the clearest examples. They are not stages. They are specialized modes applied when the work calls for them.
+Research and Diagnosis are the clearest examples. They are not stages. They are specialized modes used when the work needs them.
+
+Diagnosis applies to unexplained failures, bugs, failing tests, production symptoms, and behavior that contradicts expected product, contract, or operational behavior. For non-trivial unexplained failures, it requires root-cause evidence before `Build`. `Verify` must then prove two things: the original symptom is gone, and the diagnosed cause was actually addressed. When production or operational response is involved, Diagnosis works with Incident Overlay. Incident handles severity, impact, containment, rollback, and follow-up. Diagnosis handles the causal investigation.
 
 ### Review lenses
 
@@ -264,7 +266,7 @@ Agent OS uses files such as:
 .codex/knowledge-map.md
 ```
 
-There is no required tooling yet. Governance is manual, readable, and repository-local.
+There is no required tooling yet. Governance is manual, readable, and local to the repository.
 
 ### Blast radius
 
@@ -290,19 +292,19 @@ Agent OS is not:
 * a replacement for technical judgment
 * an excuse to turn every task into bureaucracy
 
-At this stage, Agent OS is a work specification. The process should be validated before automation is added.
+At this stage, Agent OS is a work specification. The process needs validation before automation is added.
 
 ## Why automation is not the starting point
 
 The obvious move would be to start with a bootstrap script, a few templates, and maybe a command that generates the folder structure.
 
-That would be more visible, but less reliable.
+That would be more visible. It would also be less reliable.
 
-Agent OS starts with lifecycle, governance, authority, artifacts, and knowledge management because those are the parts that decide whether the system holds up. If a repository does not know what is authoritative, what is temporary, when confirmation is required, or when durable knowledge must be updated, a script will only repeat the wrong behavior faster.
+Agent OS starts with lifecycle, governance, authority, artifacts, and knowledge management because those are the parts that decide whether the system holds up. If a repository does not know what is authoritative, what is temporary, when confirmation is required, or when durable knowledge must be updated, a script just repeats the wrong behavior faster.
 
 Automating too early freezes immature decisions. A generator can create folders, but it cannot know whether a repository really needs A3. A wrapper can force a route, but it cannot replace judgment about blast radius, security, or public contracts.
 
-For that reason, automation stays outside the core for now. First, validate the process in real repositories. Then decide what deserves automation.
+For that reason, automation stays outside the core for now. First, validate the process in real repositories. Then decide what is worth automating.
 
 ## How to use it
 
@@ -329,7 +331,7 @@ flowchart LR
     A4 --> A5[A5 Automated]
 ```
 
-The practical guide is in `docs/guides/COS_BOOTSTRAP_GUIDE.md`.
+The practical guide lives in `docs/guides/COS_BOOTSTRAP_GUIDE.md`.
 
 ## Example workflows
 
@@ -380,7 +382,7 @@ flowchart LR
     Plan --> Handoff
 ```
 
-The point is not to write code immediately. First, the agent needs to understand who consumes the contract, which rules change, what might break, and where the decision should be recorded.
+The point is not to write code immediately. First, the agent needs to understand who consumes the contract, which rules change, what might break, and where the decision belongs.
 
 Typical output:
 
@@ -484,6 +486,7 @@ The reference A3 target is:
 │   │   ├── COS_FINAL_SPEC.md
 │   │   ├── COS_ARCHITECTURE.md
 │   │   ├── COS_GOVERNANCE_SPEC.md
+│   │   ├── COS_DIAGNOSIS_OVERLAY.md
 │   │   ├── COS_IMPLEMENTATION_ARCHITECTURE.md
 │   │   └── skunklabs-codex-os-spec.md
 │   ├── decisions/
@@ -508,7 +511,7 @@ The reference A3 target is:
     └── verification/
 ```
 
-This structure should not be created all at once. Create it when it becomes useful.
+This structure should not be created all at once. Create pieces when they become useful.
 
 The most important distinction is:
 
@@ -537,13 +540,13 @@ flowchart LR
     Validation --> AutomationFuture["Automation (future)"]
 ```
 
-The core design now has a coherent shape: lifecycle, overlays, review lenses, governance, authority model, repository structure, and accepted decisions are documented.
+The core design now has a coherent shape: lifecycle, overlays, review lenses, governance, authority model, repository structure, accepted decisions, and the Diagnosis Overlay are documented.
 
-The next step is not tooling. It is adopting Agent OS in real repositories and observing where it helps: which files agents actually read, which decisions they recover, which handoffs prevent lost work, and which parts are too heavy.
+The next step is not tooling. It is adopting Agent OS in real repositories and watching where it helps: which files agents actually read, which decisions they recover, which handoffs prevent lost work, and which parts are too heavy.
 
 Open directions are concrete:
 
-* define the Diagnosis Overlay more precisely
+* validate the Diagnosis Overlay on real debugging and incident workflows
 * write manual bootstrap checklists for A1, A2, and A3
 * clarify minimum artifact schema requirements without full templates
 * define the promotion policy from `.codex-work/` to `docs/`
@@ -552,4 +555,4 @@ Open directions are concrete:
 
 Agent OS is not about producing more code. It is about preserving the context that makes code understandable: decisions, reasons, constraints, past mistakes, lessons learned, and verification evidence.
 
-It does not replace human judgment. It gives that judgment memory.
+It does not replace human judgment. It gives that judgment a memory.

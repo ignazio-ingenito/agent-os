@@ -6,9 +6,9 @@ La maggior parte dei framework per agenti AI ottimizza l'esecuzione.
 
 Agent OS ottimizza il giudizio.
 
-Fornisce flussi di lavoro su lifecycle, governance, revisione, gestione della conoscenza e presa delle decisioni per l'ingegneria assistita da AI.
+Dà all'ingegneria assistita da AI un lifecycle, un modello di governance, modalità di review, gestione della conoscenza e workflow decisionali.
 
-Progettato per funzionare con Codex, Claude Code, Gemini CLI, OpenHands, agenti in stile Cursor e piattaforme agenti future.
+È progettato per funzionare con Codex, Claude Code, Gemini CLI, OpenHands, agenti in stile Cursor e piattaforme agenti future.
 
 ---
 
@@ -21,7 +21,7 @@ Contributi, critiche ed esperimenti sono benvenuti.
 
 ---
 
-COS, Codex Operating System, nasce da un problema molto pratico: quando si lavora con agenti AI su repository reali, la parte difficile non è solo far scrivere codice. È farli ragionare con ordine, rispettare il contesto del progetto, lasciare tracce utili e non prendere scorciatoie nei punti sbagliati.
+COS, Codex Operating System, nasce da un problema molto pratico: quando si lavora con agenti AI su repository reali, far scrivere codice non è la parte difficile. La parte difficile è farli ragionare con ordine, rispettare il contesto del progetto, lasciare tracce utili e non prendere scorciatoie nei punti sbagliati.
 
 Questo repository raccoglie il design di quel sistema operativo di lavoro.
 
@@ -41,6 +41,7 @@ Non è una libreria. Non è un runtime. Non è un generatore di cartelle. Per or
 * Come usarlo, con livelli di adozione
 * Esempi di workflow
 * Struttura della repository
+* Stato della documentazione
 * Stato attuale
 
 ## Perché esiste
@@ -49,7 +50,7 @@ Gli agenti AI sono bravi a muoversi velocemente. A volte troppo.
 
 In una codebase vera, velocità senza disciplina diventa rumore: piani vaghi, file modificati prima di capire il problema, decisioni perse in chat, verifiche saltate, documenti che invecchiano senza che nessuno se ne accorga.
 
-COS esiste per mettere una struttura minima attorno a quel lavoro. Non per appesantirlo. L'idea è semplice: ogni richiesta deve passare dal livello giusto di comprensione, decisione, verifica e memoria.
+COS mette una piccola struttura attorno a quel lavoro. Non per appesantirlo. L'idea è semplice: ogni richiesta deve passare dal livello giusto di comprensione, decisione, verifica e memoria.
 
 Una correzione di testo non deve diventare una riunione di architettura. Una migrazione dati, invece, non può essere trattata come una patch locale.
 
@@ -57,7 +58,7 @@ Una correzione di testo non deve diventare una riunione di architettura. Una mig
 
 COS è pensato per persone che lavorano su repository dove il contesto conta: software engineer, architect, platform engineer, DevOps engineer, maintainer e power user di agenti come Codex, Claude Code o strumenti simili.
 
-Serve soprattutto quando gli agenti non fanno solo task isolati, ma partecipano a ricerca tecnica, decisioni architetturali, implementazione, manutenzione, review o handoff tra sessioni diverse.
+Serve soprattutto quando gli agenti fanno più di qualche task isolato: ricerca tecnica, decisioni architetturali, implementazione, manutenzione, review o handoff tra sessioni diverse.
 
 È utile anche a chi lavora da solo o in team piccoli e usa molto gli agenti AI. In quei casi spesso la stessa persona tiene insieme architettura, implementazione, documentazione e decisioni. COS aiuta a non perdere continuità tra una sessione e l'altra.
 
@@ -76,7 +77,7 @@ In pratica, COS serve quando iniziano a comparire questi problemi:
 * agenti che non distinguono tra modifica locale e azione rischiosa
 * manutenzione trattata come pulizia generica invece che come lavoro governato
 
-Non vogliamo rallentare tutto. Vogliamo evitare che il progetto paghi interessi nascosti più avanti.
+Non vogliamo rallentare tutto. Vogliamo evitare debito nascosto più avanti.
 
 ## Come si è evoluta l'idea
 
@@ -86,7 +87,7 @@ Era utile, ma troppo piatta. Alcune cose si sovrapponevano. Research sembrava un
 
 La revisione del design ha portato a una scelta più netta: COS deve essere lifecycle-first.
 
-Il lifecycle è la spina dorsale. Gli overlay aggiungono requisiti specializzati. Le review lens valutano il lavoro. La governance decide cosa è autorevole, cosa è temporaneo e cosa va aggiornato.
+Il lifecycle è la spina dorsale. Gli overlay aggiungono requisiti specializzati. Le review lens valutano il lavoro. La governance dice cosa è autorevole, cosa è temporaneo e cosa va aggiornato.
 
 Da lì sono arrivate alcune decisioni importanti:
 
@@ -101,7 +102,7 @@ Queste decisioni sono raccolte in `docs/decisions/COS_ACCEPTED_DECISIONS.md`.
 
 ## Le scoperte più importanti
 
-Il progetto è partito come una raccolta di skill e pipeline. Più lo si stressava, più diventava chiaro che il problema non era trovare altre skill.
+Il progetto è partito come una raccolta di skill e pipeline. Più lo si stressava, più diventava chiaro che il problema non era la mancanza di skill.
 
 Il problema era decidere quando usarle.
 
@@ -126,21 +127,6 @@ flowchart LR
 ## Il modello attuale
 
 Il lifecycle COS è:
-
-```mermaid
-flowchart LR
-    Intake --> Understand
-    Understand --> Challenge
-    Challenge --> Decide
-    Decide --> Plan
-    Plan --> Build
-    Build --> Verify
-    Verify --> Release
-    Release --> Handoff
-    Handoff --> Maintain
-```
-
-Lo stesso percorso, visto come flusso:
 
 ```mermaid
 flowchart LR
@@ -182,7 +168,7 @@ Le fasi servono a mantenere il lavoro leggibile:
 
 ## Concetti chiave
 
-Questa è la relazione base tra richiesta, lifecycle, lens, overlay e ciò che resta alla fine del lavoro:
+Questa è la relazione base tra richiesta, lifecycle, lens, overlay e ciò che rimane alla fine del lavoro:
 
 ```mermaid
 flowchart LR
@@ -239,7 +225,9 @@ Gli overlay attivi sono:
 * Diagnosis
 * Incident
 
-Research e Diagnosis sono i due esempi più importanti. Non sono fasi. Sono modalità specializzate applicate quando servono.
+Research e Diagnosis sono i due esempi più importanti. Non sono fasi. Sono modalità specializzate usate quando il lavoro le richiede.
+
+Diagnosis si applica a failure non spiegati, bug, test falliti, sintomi di produzione e comportamenti che contraddicono il comportamento atteso di prodotto, contratto o operatività. Per i failure non banali e non spiegati, richiede evidenza di root cause prima di `Build`. `Verify` deve poi provare due cose: il sintomo originale non si presenta più, e la causa diagnosticata è stata davvero risolta. Quando c'è una risposta operativa o di produzione, Diagnosis lavora insieme a Incident Overlay. Incident gestisce severità, impatto, contenimento, rollback e follow-up. Diagnosis gestisce l'indagine causale.
 
 ### Review lenses
 
@@ -272,7 +260,7 @@ COS usa file come:
 .codex/knowledge-map.md
 ```
 
-Per ora non c'è tooling. La governance è manuale e leggibile.
+Per ora non c'è tooling obbligatorio. La governance è manuale e leggibile.
 
 ### Blast radius
 
@@ -298,17 +286,17 @@ COS non è:
 * un sostituto del giudizio tecnico
 * una scusa per trasformare ogni task in burocrazia
 
-Al momento COS è una specifica di lavoro. Prima si valida il modo di lavorare. Solo dopo ha senso pensare ad automazione.
+Al momento COS è una specifica di lavoro. Prima si valida il modo di lavorare. Solo dopo ha senso parlare di automazione.
 
 ## Perché non siamo partiti dall'automazione
 
-La tentazione era ovvia: creare subito uno script di bootstrap, qualche template, magari un comando per generare la struttura. Sarebbe stato più vistoso, ma anche più fragile.
+La tentazione era ovvia: creare subito uno script di bootstrap, qualche template, magari un comando per generare la struttura. Sarebbe stato più vistoso. Anche più fragile.
 
-COS è partito da lifecycle, governance, authority model, artifact model e knowledge management perché questi sono i pezzi che decidono se il sistema regge. Se non sai ancora cosa è autorevole, cosa è temporaneo, quando chiedere conferma e quando aggiornare conoscenza duratura, uno script non risolve il problema. Lo rende solo più veloce da ripetere.
+COS è partito da lifecycle, governance, authority model, artifact model e knowledge management perché questi sono i pezzi che decidono se il sistema regge. Se non sai ancora cosa è autorevole, cosa è temporaneo, quando chiedere conferma e quando aggiornare conoscenza duratura, uno script non risolve il problema. Lo ripete solo più velocemente.
 
 Automatizzare troppo presto è pericoloso perché congela decisioni immature. Un generatore può creare cartelle, ma non può sapere se la tua repo ha davvero bisogno di A3. Un wrapper può forzare una route, ma non può sostituire il giudizio su blast radius, sicurezza o contratti pubblici.
 
-Per questo l'automazione resta fuori dal core COS. Prima si valida il processo in repository reali. Poi si decide cosa merita di essere automatizzato.
+Per questo l'automazione resta fuori dal core COS. Prima si valida il processo in repository reali. Poi si decide cosa vale la pena automatizzare.
 
 ## Come usarlo
 
@@ -335,7 +323,7 @@ flowchart LR
     A4 --> A5[A5 Automated]
 ```
 
-La guida pratica è in `docs/guides/COS_BOOTSTRAP_GUIDE.md`.
+La guida pratica si trova in `docs/guides/COS_BOOTSTRAP_GUIDE.md`.
 
 ## Esempi di workflow
 
@@ -386,7 +374,7 @@ flowchart LR
     Plan --> Handoff
 ```
 
-Qui il punto non è scrivere subito codice. Prima bisogna capire chi consuma il contratto, quali regole cambiano, cosa si rompe, e dove registrare la decisione.
+Qui il punto non è scrivere subito codice. Prima bisogna capire chi consuma il contratto, quali regole cambiano, cosa si rompe, e dove deve stare la decisione.
 
 Output tipico:
 
@@ -490,6 +478,7 @@ Il target A3 di riferimento è:
 │   │   ├── COS_FINAL_SPEC.md
 │   │   ├── COS_ARCHITECTURE.md
 │   │   ├── COS_GOVERNANCE_SPEC.md
+│   │   ├── COS_DIAGNOSIS_OVERLAY.md
 │   │   ├── COS_IMPLEMENTATION_ARCHITECTURE.md
 │   │   └── skunklabs-codex-os-spec.md
 │   ├── decisions/
@@ -514,7 +503,7 @@ Il target A3 di riferimento è:
     └── verification/
 ```
 
-Questa struttura non va creata tutta subito. Si crea quando serve.
+Questa struttura non va creata tutta subito. Si creano i pezzi quando servono.
 
 La distinzione più utile:
 
@@ -523,6 +512,14 @@ La distinzione più utile:
 * `.codex-work/` contiene contesto temporaneo
 
 `.codex-work/` è effimera per default. Se una nota lì dentro cambia una decisione, un contratto, un incidente, una release o conoscenza di lungo periodo, va promossa in `docs/`.
+
+## Stato della documentazione
+
+L'inglese è la lingua principale per la documentazione open source in questo repository.
+
+Il README è disponibile in inglese e italiano. Per ora, il resto della documentazione non è stato tradotto; specifiche, decisioni, guide e review esistenti sono mantenute come sono.
+
+Altre traduzioni potranno essere aggiunte in seguito quando i documenti sorgente saranno più stabili.
 
 ## Stato attuale
 
@@ -535,13 +532,13 @@ flowchart LR
     Validation --> AutomationFuture["Automation (future)"]
 ```
 
-Oggi il design di base ha una forma coerente: lifecycle, overlay, review lens, governance, authority model, struttura della repo e decisioni accettate sono documentati.
+Oggi il design di base ha una forma coerente: lifecycle, overlay, review lens, governance, authority model, struttura della repo, decisioni accettate e Diagnosis Overlay sono documentati.
 
 Il passo successivo non è scrivere tooling. È adottare COS in repository reali e vedere dove aiuta davvero: quali file vengono letti, quali decisioni vengono recuperate, quali handoff evitano lavoro perso, quali parti invece sono troppo pesanti.
 
 Le direzioni aperte sono concrete:
 
-* definire meglio la Diagnosis Overlay
+* validare la Diagnosis Overlay su workflow reali di debugging e incident
 * scrivere checklist manuali per bootstrap A1, A2 e A3
 * chiarire i requisiti minimi degli artifact schema, senza template completi
 * fissare la policy di promozione da `.codex-work/` a `docs/`
@@ -550,4 +547,4 @@ Le direzioni aperte sono concrete:
 
 COS non serve a produrre più codice. Serve a non perdere il contesto che rende quel codice comprensibile: decisioni, motivazioni, vincoli, errori già fatti, lezioni già imparate.
 
-Non sostituisce il giudizio umano. Gli dà memoria. Se funziona, si vede da decisioni migliori, meno debito tecnico invisibile e meno tempo speso a imparare due volte la stessa cosa.
+Non sostituisce il giudizio umano. Gli dà una memoria. Se funziona, si vede da decisioni migliori, meno debito tecnico invisibile e meno tempo speso a imparare due volte la stessa cosa.
