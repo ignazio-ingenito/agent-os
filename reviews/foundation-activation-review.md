@@ -1,6 +1,6 @@
 # Foundation Activation Review
 
-**Stato:** Active
+**Stato:** Draft
 **Data:** 2026-07-14
 
 ## Obiettivo
@@ -59,6 +59,6 @@ Nessuno.
 | Le decisioni rilevanti sono tracciabili e contestabili? | SÌ | La decisione di attivazione è collegata ai controlli e alle evidenze del report. |
 | Ogni informazione operativa ha una sola fonte autorevole? | SÌ | REQ-0001 resta fonte del requisito; RFC-0001 resta fonte dei principi; il report registra l'esito della verifica. |
 | Sono state introdotte duplicazioni evitabili? | NO | Non sono stati duplicati workflow, formati o regole operative. Azione correttiva: nessuna. |
-| I documenti interessati hanno uno stato corretto? | SÌ | REQ-0001, RFC-0001 e questo report sono `Active`. |
+| I documenti interessati hanno uno stato corretto? | SÌ | `REQ-0001` è `Active`; `RFC-0001` è `Active`; `foundation-activation-review.md` resta `Draft` in attesa di approvazione. |
 | La documentazione attiva rappresenta lo stato corrente del progetto? | SÌ | `README.md` elenca già REQ-0001 e RFC-0001 tra i documenti attivi. |
 | Le verifiche producono evidenze osservabili? | SÌ | Le evidenze sono riportate nella tabella dei controlli e saranno confermate da `git diff --check` e ispezione del diff. |
