@@ -1,6 +1,8 @@
 # WAVE-0001 – Validare REQ-0001
 
-**Stato:** Ready
+**Stato:** Archived
+
+Nota: wave completata tramite PR #6; il file è conservato esclusivamente come evidenza storica e non costituisce un'istruzione operativa corrente.
 
 ## Obiettivo
 

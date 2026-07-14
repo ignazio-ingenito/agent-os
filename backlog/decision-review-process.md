@@ -1,6 +1,6 @@
 # Decision Review Process
 
-**Stato:** Da validare
+**Stato:** Draft
 
 ## Obiettivo
 
@@ -21,6 +21,8 @@ Deve essere formalizzato solo dopo essere stato applicato con successo ad almeno
 ## Sequenza di lenti usata per RFC-0001
 
 Questa sequenza viene conservata esclusivamente per poterla riutilizzare durante la validazione:
+
+La sequenza può essere richiesta esplicitamente da un task durante la validazione, senza acquisire per questo valore di regola operativa generale.
 
 1. **Challenge Me**  
    Cerca contraddizioni, casi limite, assunzioni implicite e conseguenze indesiderate.
