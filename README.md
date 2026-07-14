@@ -14,6 +14,9 @@ L'obiettivo è ridurre il lavoro manuale ripetitivo, mantenere le decisioni nel 
 
 ## Documenti in validazione
 
+- [`software-factory.md`](software-factory.md)
+  Workflow funzionale minimo della Software Factory.
+
 - [`backlog/decision-review-process.md`](backlog/decision-review-process.md)  
   Ipotesi di processo di review da validare su ulteriori casi d'uso.
 
