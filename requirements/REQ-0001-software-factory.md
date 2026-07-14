@@ -1,6 +1,6 @@
 # REQ-0001 – Software Factory per lo sviluppo assistito da AI
 
-**Stato:** Draft
+**Stato:** Active
 
 ## Origine
 
