@@ -1,6 +1,7 @@
 # Review REQ-0001
 
-**Stato:** Draft
+**Stato:** Archived
+Nota: questa review rappresenta lo stato dell'artefatto al momento in cui è stata eseguita; viene conservata come evidenza storica e non deve essere usata come istruzione operativa corrente.
 **Data:** 2026-07-14
 
 ## Artefatto revisionato
