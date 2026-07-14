@@ -68,7 +68,7 @@ Una wave è funzionalmente completata quando:
 
 - il task definito nell'handoff è stato eseguito sulla branch della Pull Request interessata;
 - le verifiche previste dal progetto sono state eseguite e registrate con evidenze osservabili;
-- eventuali osservazioni di review bloccanti sono state risolte oppure sono coperte da una deroga esplicitamente approvata e motivata;
+- eventuali osservazioni di review bloccanti sono state risolte oppure accettate esplicitamente dal proprietario del progetto con motivazione registrata;
 - l'approvazione richiesta è presente;
 - la Pull Request è stata integrata senza automatizzare modifiche non approvate;
 - il contesto necessario per una wave successiva è conservato nel repository quando serve a ricostruire il lavoro, motivare una decisione o proseguire il piano.
