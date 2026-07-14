@@ -1,6 +1,6 @@
 # RFC-0001 – Principi fondanti della Software Factory
 
-**Stato:** Draft  
+**Stato:** Active
 **Versione:** 0.1.0  
 **Ultima modifica:** 2026-07-14
 
