@@ -8,13 +8,25 @@ Questo requisito raccoglie l'esigenza iniziale da cui è nato il progetto.
 
 L'utente utilizza ChatGPT tramite l'interfaccia web, senza API OpenAI, per elaborare handoff e svolgere review. Codex viene invece eseguito nel Developer Workspace e può operare sul repository tramite GitHub.
 
+## Ambito
+
+Questo documento definisce il bisogno da soddisfare, i vincoli e i criteri di successo della Software Factory.
+
+Non definisce l'architettura tecnica, i formati definitivi degli artefatti o i meccanismi di orchestrazione, che devono essere decisi in documenti successivi e coerenti con questo requisito.
+
 ## Obiettivo
 
-Realizzare una Software Factory che riduca al minimo l'intervento umano nelle attività ripetitive dello sviluppo software assistito da AI, mantenendo il controllo umano sulla definizione del lavoro, sulle decisioni rilevanti e sull'approvazione finale.
+Realizzare una Software Factory che riduca l'intervento umano ripetitivo nello sviluppo software assistito da AI, mantenendo il controllo umano su:
+
+- definizione del lavoro;
+- decisioni rilevanti;
+- approvazione finale delle modifiche.
 
 L'automazione deve essere introdotta progressivamente e solo per attività mature, verificabili e realmente implementabili.
 
 ## Flusso desiderato
+
+Il flusso seguente descrive il comportamento atteso a livello funzionale. Non prescrive trigger, strumenti di orchestrazione, formati o componenti tecnici specifici.
 
 1. L'utente definisce in ChatGPT una wave di lavoro.
 2. ChatGPT produce un handoff strutturato.
@@ -35,9 +47,9 @@ L'automazione deve essere introdotta progressivamente e solo per attività matur
 
 - ChatGPT non viene invocato tramite API.
 - Non deve essere automatizzata in modo non supportato o fragile l'interfaccia web di ChatGPT.
-- Il lavoro manuale di copia e incolla deve essere ridotto al minimo.
+- Il lavoro manuale di copia e incolla tra strumenti deve essere eliminato dai passaggi ripetitivi successivi alla produzione dell'handoff, salvo azioni manuali esplicitamente richieste dal controllo umano.
 - Le chat non devono essere usate come memoria permanente del progetto.
-- Requisiti, decisioni, handoff, review e stato del lavoro devono essere conservati nel repository quando rilevanti.
+- Requisiti, decisioni, handoff, review e stato del lavoro devono essere conservati nel repository quando sono necessari per ricostruire il contesto operativo, motivare una decisione o proseguire una wave successiva.
 - Il contesto fornito agli strumenti deve contenere solo le informazioni necessarie e ancora applicabili.
 - Codex deve lavorare sulla stessa branch della Pull Request interessata.
 - Le verifiche devono produrre evidenze osservabili.
@@ -48,13 +60,14 @@ L'automazione deve essere introdotta progressivamente e solo per attività matur
 
 Il requisito è soddisfatto quando:
 
-- una wave può essere trasformata in una Pull Request senza copia e incolla manuali tra più strumenti;
-- il Developer Workspace può individuare il task e avviare Codex;
-- Codex può implementare e aggiornare la stessa Pull Request;
-- le verifiche automatiche vengono eseguite e registrate;
-- le osservazioni di review possono produrre un nuovo ciclo di implementazione;
-- il merge avviene solo dopo il superamento dei controlli previsti;
-- la wave successiva può essere preparata conservando il contesto necessario;
+- una wave può essere trasformata in una Pull Request contenente l'handoff previsto, senza copia e incolla manuali ripetitivi tra più strumenti dopo la produzione dell'handoff;
+- il Developer Workspace può individuare, da una Pull Request, il file di task da eseguire;
+- Codex può essere avviato sulla branch della Pull Request interessata;
+- Codex può implementare il task e aggiungere aggiornamenti alla stessa Pull Request;
+- le verifiche previste dal progetto vengono eseguite e il loro esito viene registrato con evidenze osservabili;
+- le osservazioni di review registrate nella Pull Request possono produrre un nuovo ciclo di implementazione sulla stessa branch;
+- il merge avviene solo dopo il superamento dei controlli previsti e dell'approvazione richiesta;
+- la wave successiva può essere preparata usando il contesto necessario conservato nel repository;
 - il processo non dipende dalla lunghezza o dalla persistenza di una singola chat.
 
 ## Fuori dal requisito attuale
