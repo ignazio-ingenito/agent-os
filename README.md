@@ -33,19 +33,24 @@ Lo scheletro iniziale dei progetti vive in `templates/project/`. Contiene le reg
 Per creare un nuovo progetto locale a partire dallo scheletro:
 
 ```bash
-./scripts/init-project.sh /percorso/nuovo-progetto
+./scripts/init-project.sh /percorso/progetto
+./scripts/init-project.sh --no-prompt /percorso/progetto
+./scripts/init-project.sh --remote git@github.com:utente/progetto.git /percorso/progetto
 ```
 
 Per vedere cosa verrebbe creato senza modificare la destinazione:
 
 ```bash
-./scripts/init-project.sh --dry-run /percorso/nuovo-progetto
+./scripts/init-project.sh --dry-run /percorso/progetto
+./scripts/init-project.sh --dry-run --remote git@github.com:utente/progetto.git /percorso/progetto
 ```
 
 Lo script crea la directory quando manca, esegue `git init` se la destinazione non è già un repository Git autonomo e copia integralmente i file da `templates/project/`.
 
 La destinazione viene accettata solo quando non esiste, è vuota, contiene soltanto `.git`, oppure è un progetto già inizializzato con gli stessi file dello scheletro. In caso di contenuti diversi o file aggiuntivi, lo script termina con `ERROR` prima di modificare la destinazione.
 
-Lo script non crea commit, branch o remote, non esegue push e non modifica configurazioni Git globali. Eventuali remote già presenti in un repository Git vuoto restano invariati. Dopo l'inizializzazione, il nuovo progetto è autonomo e può ricevere in seguito il proprio remote `origin`.
+Il remote è facoltativo. Il default è nessun remote; in un terminale interattivo lo script può proporre di configurare `origin`. `--no-prompt` disabilita ogni domanda. `--remote` configura direttamente `origin` con l'URL indicato, senza creare il repository remoto e senza eseguire push. L'utente può configurare `origin` anche in seguito con i normali comandi Git.
+
+Lo script non crea commit o branch, non esegue push e non modifica configurazioni Git globali. Eventuali remote già presenti in un repository Git vuoto restano invariati.
 
 Dopo l'inizializzazione, i file copiati appartengono al nuovo repository. Le modifiche future a `templates/project/` valgono solo per nuove inizializzazioni e non sincronizzano automaticamente i progetti già creati.

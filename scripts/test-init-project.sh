@@ -34,6 +34,14 @@ assert_no_remote() {
   [ -z "$remotes" ] || fail "remote inatteso in $dir"
 }
 
+assert_remote_url() {
+  dir=$1
+  name=$2
+  expected=$3
+  actual=$(git -C "$dir" config --get "remote.$name.url")
+  [ "$actual" = "$expected" ] || fail "remote $name diverso: $actual"
+}
+
 assert_same_tree() {
   dir=$1
   expected=$tmp_dir/expected.list
@@ -69,7 +77,56 @@ missing_init=$tmp_dir/missing-init
 assert_git_repo "$missing_init"
 assert_same_tree "$missing_init"
 assert_no_remote "$missing_init"
-printf '%s\n' 'OK inizializzazione su percorso inesistente'
+grep 'Vuoi configurare il remote origin' "$tmp_dir/missing-init.out" >/dev/null && fail 'esecuzione non interattiva ha mostrato prompt'
+grep '^Nessun remote configurato\.$' "$tmp_dir/missing-init.out" >/dev/null || fail 'default senza remote non riportato'
+printf '%s\n' 'OK default non interattivo senza remote'
+
+no_prompt=$tmp_dir/no-prompt
+"$init_script" --no-prompt "$no_prompt" > "$tmp_dir/no-prompt.out"
+assert_git_repo "$no_prompt"
+assert_same_tree "$no_prompt"
+assert_no_remote "$no_prompt"
+grep 'Vuoi configurare il remote origin' "$tmp_dir/no-prompt.out" >/dev/null && fail '--no-prompt ha mostrato prompt'
+printf '%s\n' 'OK --no-prompt senza remote'
+
+remote_project=$tmp_dir/remote-project
+ssh_url='git@github.com:utente/progetto.git'
+"$init_script" --remote "$ssh_url" "$remote_project" > "$tmp_dir/remote-project.out"
+assert_git_repo "$remote_project"
+assert_same_tree "$remote_project"
+assert_remote_url "$remote_project" origin "$ssh_url"
+grep "^REMOTE_ADD origin $ssh_url$" "$tmp_dir/remote-project.out" >/dev/null || fail '--remote non mostra REMOTE_ADD'
+printf '%s\n' 'OK --remote su nuovo progetto SSH'
+
+no_prompt_remote=$tmp_dir/no-prompt-remote
+https_url='https://github.com/utente/progetto.git'
+"$init_script" --no-prompt --remote "$https_url" "$no_prompt_remote" > "$tmp_dir/no-prompt-remote.out"
+assert_git_repo "$no_prompt_remote"
+assert_same_tree "$no_prompt_remote"
+assert_remote_url "$no_prompt_remote" origin "$https_url"
+grep 'Vuoi configurare il remote origin' "$tmp_dir/no-prompt-remote.out" >/dev/null && fail '--no-prompt --remote ha mostrato prompt'
+printf '%s\n' 'OK --no-prompt --remote HTTPS'
+
+dry_remote=$tmp_dir/dry-remote
+"$init_script" --dry-run --remote "$ssh_url" "$dry_remote" > "$tmp_dir/dry-remote.out"
+[ ! -e "$dry_remote" ] || fail 'dry-run --remote ha creato la directory'
+grep "^REMOTE_ADD origin $ssh_url$" "$tmp_dir/dry-remote.out" >/dev/null || fail 'dry-run --remote non mostra REMOTE_ADD'
+printf '%s\n' 'OK dry-run --remote senza modifiche'
+
+dry_sensitive=$tmp_dir/dry-sensitive
+sensitive_url='https://token-secret@example.invalid/utente/progetto.git'
+"$init_script" --dry-run --remote "$sensitive_url" "$dry_sensitive" > "$tmp_dir/dry-sensitive.out"
+grep 'token-secret' "$tmp_dir/dry-sensitive.out" >/dev/null && fail 'URL sensibile stampato integralmente'
+grep '^REMOTE_ADD origin https://\*\*\*@example.invalid/utente/progetto.git$' "$tmp_dir/dry-sensitive.out" >/dev/null || fail 'URL sensibile non mascherato'
+printf '%s\n' 'OK URL con credenziali mascherato in output'
+
+missing_remote_url=$tmp_dir/missing-remote-url
+if "$init_script" "$missing_remote_url" --remote > "$tmp_dir/missing-remote-url.out" 2> "$tmp_dir/missing-remote-url.err"; then
+  fail '--remote senza URL accettato'
+fi
+[ ! -e "$missing_remote_url" ] || fail '--remote senza URL ha modificato la destinazione'
+grep '^ERROR opzione --remote senza URL$' "$tmp_dir/missing-remote-url.err" >/dev/null || fail 'errore --remote senza URL non riportato'
+printf '%s\n' 'OK --remote senza URL'
 
 empty_dir=$tmp_dir/empty-dir
 mkdir -p "$empty_dir"
@@ -85,9 +142,32 @@ git -C "$repo_empty" remote add origin git@example.invalid:owner/repo.git
 "$init_script" "$repo_empty" > "$tmp_dir/repo-empty.out"
 assert_git_repo "$repo_empty"
 assert_same_tree "$repo_empty"
-remote_url=$(git -C "$repo_empty" remote get-url origin)
-[ "$remote_url" = 'git@example.invalid:owner/repo.git' ] || fail 'remote esistente modificato'
+assert_remote_url "$repo_empty" origin 'git@example.invalid:owner/repo.git'
 printf '%s\n' 'OK repository Git vuoto con remote preservato'
+
+repo_origin_conflict=$tmp_dir/repo-origin-conflict
+make_repo "$repo_origin_conflict"
+git -C "$repo_origin_conflict" remote add origin git@example.invalid:owner/original.git
+if "$init_script" --dry-run --remote "$ssh_url" "$repo_origin_conflict" > "$tmp_dir/repo-origin-conflict-dry.out" 2> "$tmp_dir/repo-origin-conflict-dry.err"; then
+  fail 'dry-run --remote ha accettato origin esistente'
+fi
+! grep '^REMOTE_ADD ' "$tmp_dir/repo-origin-conflict-dry.out" >/dev/null || fail 'dry-run mostra REMOTE_ADD con origin esistente'
+if "$init_script" --remote "$ssh_url" "$repo_origin_conflict" > "$tmp_dir/repo-origin-conflict.out" 2> "$tmp_dir/repo-origin-conflict.err"; then
+  fail '--remote ha sovrascritto origin esistente'
+fi
+assert_remote_url "$repo_origin_conflict" origin 'git@example.invalid:owner/original.git'
+find "$repo_origin_conflict" -mindepth 1 -not -path "$repo_origin_conflict/.git" -not -path "$repo_origin_conflict/.git/*" | grep . >/dev/null && fail 'origin esistente ha prodotto copia file'
+grep '^ERROR remote origin già esistente:' "$tmp_dir/repo-origin-conflict.err" >/dev/null || fail 'errore origin esistente non riportato'
+printf '%s\n' 'OK --remote rifiuta origin esistente senza copia'
+
+repo_other_remote=$tmp_dir/repo-other-remote
+make_repo "$repo_other_remote"
+git -C "$repo_other_remote" remote add upstream git@example.invalid:owner/upstream.git
+"$init_script" --remote "$https_url" "$repo_other_remote" > "$tmp_dir/repo-other-remote.out"
+assert_same_tree "$repo_other_remote"
+assert_remote_url "$repo_other_remote" upstream 'git@example.invalid:owner/upstream.git'
+assert_remote_url "$repo_other_remote" origin "$https_url"
+printf '%s\n' 'OK altri remote preservati e origin aggiunto'
 
 non_empty=$tmp_dir/non-empty
 mkdir -p "$non_empty"
@@ -108,6 +188,12 @@ grep '^UNCHANGED AGENTS.md$' "$tmp_dir/second.out" >/dev/null || fail 'seconda e
 assert_same_tree "$missing_init"
 assert_no_remote "$missing_init"
 printf '%s\n' 'OK seconda inizializzazione idempotente'
+
+"$init_script" "$remote_project" > "$tmp_dir/second-remote.out"
+assert_same_tree "$remote_project"
+assert_remote_url "$remote_project" origin "$ssh_url"
+! grep '^REMOTE_ADD ' "$tmp_dir/second-remote.out" >/dev/null || fail 'seconda esecuzione ha modificato origin'
+printf '%s\n' 'OK seconda esecuzione preserva origin'
 
 repo_conflict=$tmp_dir/repo-conflict
 "$init_script" "$repo_conflict" > "$tmp_dir/conflict-init.out"
@@ -135,6 +221,15 @@ assert_git_repo "$repo_spaces"
 assert_same_tree "$repo_spaces"
 assert_no_remote "$repo_spaces"
 printf '%s\n' 'OK percorso contenente spazi'
+
+repo_eval=$tmp_dir/repo-eval
+eval_url='https://example.invalid/utente/$(touch-eval-non-deve-esistere);progetto.git'
+"$init_script" --remote "$eval_url" "$repo_eval" > "$tmp_dir/eval.out"
+assert_git_repo "$repo_eval"
+assert_same_tree "$repo_eval"
+assert_remote_url "$repo_eval" origin "$eval_url"
+[ ! -e "$tmp_dir/touch-eval-non-deve-esistere" ] || fail 'URL interpretato tramite eval'
+printf '%s\n' 'OK URL remoto passato senza eval'
 
 repo_init=$tmp_dir/repo-init
 "$init_script" "$repo_init" > "$tmp_dir/init.out"
