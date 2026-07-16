@@ -51,6 +51,16 @@ if ! git -C "$dest" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   exit 2
 fi
 
+dest_root=$(CDPATH= cd -- "$dest" && pwd -P)
+git_root=$(git -C "$dest" rev-parse --show-toplevel)
+git_root=$(CDPATH= cd -- "$git_root" && pwd -P)
+
+if [ "$dest_root" != "$git_root" ]; then
+  error "la destinazione non è la root del repository Git: $dest"
+  error "root corretta: $git_root"
+  exit 2
+fi
+
 create_list=$(mktemp)
 unchanged_list=$(mktemp)
 conflict_list=$(mktemp)

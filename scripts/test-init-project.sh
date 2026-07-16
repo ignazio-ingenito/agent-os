@@ -75,6 +75,16 @@ fi
 grep '^ERROR la destinazione non è un repository Git:' "$tmp_dir/not-git.err" >/dev/null || fail 'errore non Git non riportato'
 printf '%s\n' 'OK destinazione non Git'
 
+repo_subdir=$tmp_dir/repo-subdir
+make_repo "$repo_subdir"
+mkdir -p "$repo_subdir/subdir"
+if "$init_script" "$repo_subdir/subdir" > "$tmp_dir/subdir.out" 2> "$tmp_dir/subdir.err"; then
+  fail 'sottocartella repository Git accettata'
+fi
+grep '^ERROR la destinazione non è la root del repository Git:' "$tmp_dir/subdir.err" >/dev/null || fail 'errore root repository non riportato'
+assert_empty_find "$repo_subdir/subdir"
+printf '%s\n' 'OK sottocartella repository Git rifiutata'
+
 repo_other=$tmp_dir/repo-other
 make_repo "$repo_other"
 (cd /tmp && "$init_script" "$repo_other") > "$tmp_dir/other.out"
