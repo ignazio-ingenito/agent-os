@@ -52,3 +52,11 @@ Fornire:
 - documenti aggiornati, sostituiti o archiviati.
 
 Non dichiarare completato un lavoro quando una verifica obbligatoria ha esito negativo.
+
+## Scheletro iniziale dei progetti
+
+- `templates/project/` è la fonte autorevole dello scheletro iniziale destinato ai nuovi repository.
+- Lo scheletro deve rispettare `rfcs/RFC-0001-principles.md` e mantenere una sola fonte autorevole per ogni informazione operativa.
+- I file copiati in un nuovo repository diventano fonti locali autonome di quel progetto; le modifiche future a `templates/project/` non si propagano automaticamente.
+- I file approvati nello scheletro non devono essere riscritti senza un requisito concreto e verificabile.
+- `scripts/init-project.sh` è il meccanismo canonico per inizializzare e verificare la copia dello scheletro in un repository Git esistente.

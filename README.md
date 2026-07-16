@@ -25,3 +25,23 @@ L'obiettivo è ridurre il lavoro manuale ripetitivo, mantenere le decisioni nel 
 Le istruzioni per lavorare nel repository sono definite in [`AGENTS.md`](AGENTS.md).
 
 Il repository deve rimanere essenziale. Nuovi documenti, cartelle, workflow o automazioni devono essere introdotti solo quando rispondono a un'esigenza reale e non possono essere evitati o accorpati.
+
+## Scheletro iniziale per nuovi repository
+
+Lo scheletro iniziale dei progetti vive in `templates/project/`. Contiene le regole operative minime, l'indice documentale, il puntatore allo stato esecutivo e i template per issue, pull request e wave.
+
+Per applicarlo a un repository Git esistente:
+
+```bash
+./scripts/init-project.sh /percorso/progetto
+```
+
+Per vedere cosa verrebbe creato senza modificare la destinazione:
+
+```bash
+./scripts/init-project.sh --dry-run /percorso/progetto
+```
+
+Lo script copia solo i file mancanti, lascia invariati quelli identici e si ferma prima di qualsiasi copia se trova un file esistente con contenuto diverso. Non crea commit, branch, remote o configurazioni Git nel progetto di destinazione.
+
+Dopo l'inizializzazione, i file copiati appartengono al nuovo repository. Le modifiche future a `templates/project/` valgono solo per nuove inizializzazioni e non sincronizzano automaticamente i progetti già creati.
