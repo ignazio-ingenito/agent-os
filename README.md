@@ -30,18 +30,22 @@ Il repository deve rimanere essenziale. Nuovi documenti, cartelle, workflow o au
 
 Lo scheletro iniziale dei progetti vive in `templates/project/`. Contiene le regole operative minime, l'indice documentale, il puntatore allo stato esecutivo e i template per issue, pull request e wave.
 
-Per applicarlo a un repository Git esistente:
+Per creare un nuovo progetto locale a partire dallo scheletro:
 
 ```bash
-./scripts/init-project.sh /percorso/progetto
+./scripts/init-project.sh /percorso/nuovo-progetto
 ```
 
 Per vedere cosa verrebbe creato senza modificare la destinazione:
 
 ```bash
-./scripts/init-project.sh --dry-run /percorso/progetto
+./scripts/init-project.sh --dry-run /percorso/nuovo-progetto
 ```
 
-Lo script copia solo i file mancanti, lascia invariati quelli identici e si ferma prima di qualsiasi copia se trova un file esistente con contenuto diverso. Non crea commit, branch, remote o configurazioni Git nel progetto di destinazione.
+Lo script crea la directory quando manca, esegue `git init` se la destinazione non è già un repository Git autonomo e copia integralmente i file da `templates/project/`.
+
+La destinazione viene accettata solo quando non esiste, è vuota, contiene soltanto `.git`, oppure è un progetto già inizializzato con gli stessi file dello scheletro. In caso di contenuti diversi o file aggiuntivi, lo script termina con `ERROR` prima di modificare la destinazione.
+
+Lo script non crea commit, branch o remote, non esegue push e non modifica configurazioni Git globali. Eventuali remote già presenti in un repository Git vuoto restano invariati. Dopo l'inizializzazione, il nuovo progetto è autonomo e può ricevere in seguito il proprio remote `origin`.
 
 Dopo l'inizializzazione, i file copiati appartengono al nuovo repository. Le modifiche future a `templates/project/` valgono solo per nuove inizializzazioni e non sincronizzano automaticamente i progetti già creati.
