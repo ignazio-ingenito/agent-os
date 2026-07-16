@@ -75,3 +75,15 @@ Il processo può essere proposto come standard solo quando:
 - l'output ha consentito decisioni tracciabili e contestabili.
 
 Fino ad allora, questo documento resta una nota di backlog e non costituisce una regola operativa.
+
+## Evoluzioni future del bootstrap
+
+Queste idee non sono implementate ora perché il bootstrap approvato deve restare minimo e verificabile.
+
+| Nome | Obiettivo | Perché non oggi | Requisito abilitante |
+|---|---|---|---|
+| Placeholder automatici | Sostituire valori generici nei file copiati. | Non serve alla creazione dello scheletro minimo. | Presenza di valori ripetitivi che richiedono sostituzione manuale frequente. |
+| `--project-name` | Passare esplicitamente il nome del progetto allo script. | Non esiste ancora un campo dello scheletro che lo richieda. | Template approvati che dipendono dal nome progetto. |
+| `doctor` | Diagnosticare lo stato di un progetto inizializzato. | Non c'è ancora un insieme di controlli ricorrenti da automatizzare. | Errori ripetuti o checklist stabile da verificare sui progetti. |
+| Sincronizzazione dei template | Propagare modifiche future di `templates/project/`. | Contrasta con il principio attuale di autonomia dei progetti creati. | Decisione esplicita di mantenere allineati più repository già inizializzati. |
+| Aggiornamento repository già inizializzati | Applicare cambiamenti dello scheletro a repository esistenti. | Richiederebbe regole di merge e conflitto non ancora necessarie. | Casi reali in cui più repository devono ricevere lo stesso aggiornamento. |

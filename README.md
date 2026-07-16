@@ -30,6 +30,20 @@ Il repository deve rimanere essenziale. Nuovi documenti, cartelle, workflow o au
 
 Lo scheletro iniziale dei progetti vive in `templates/project/`. Contiene le regole operative minime, l'indice documentale, il puntatore allo stato esecutivo e i template per issue, pull request e wave.
 
+```text
+agent-os
+      │ scripts/init-project.sh
+      ▼
+nuovo progetto locale
+      ├── crea directory (se necessaria)
+      ├── git init
+      ├── copia templates/project/
+      └── progetto autonomo
+                └── origin (facoltativo)
+```
+
+Il bootstrap crea un punto di partenza comune, non un collegamento permanente con Agent OS.
+
 Per creare un nuovo progetto locale a partire dallo scheletro:
 
 ```bash
